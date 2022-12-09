@@ -1,3 +1,14 @@
+enum AccountType {
+    Amazon, 
+    Twitch,
+} 
+struct Acc {
+    accounttype: AccountType,
+    username: String,
+    password: String,
+    claimed: bool,
+}
+
 use thirtyfour::prelude::*;
 async fn amazon_login(amazonusername: &str, amazonpassword: &str) -> WebDriverResult<()> {
     let caps = DesiredCapabilities::firefox();
@@ -35,6 +46,17 @@ async fn amazon_login(amazonusername: &str, amazonpassword: &str) -> WebDriverRe
 }
 #[tokio::main]
 async fn main() {
-    let result = amazon_login("wad", "wad").await;
+    let account = Acc {
+        accounttype: AccountType::Amazon,
+        username: "test".to_string(),
+        password: "password".to_string(),
+        claimed: false,
+    };
+    let result = amazon_login(&account.username,&account.password).await;
+    //    account.claimed=true;
     let result2 = amazon_login("wad", "wad").await;
+    println!("{}", match account {
+        username => "username existo",
+        _ => "sexo testo"
+    });
 }
