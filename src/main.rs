@@ -1,4 +1,4 @@
-se thirtyfour::prelude::*;
+use thirtyfour::prelude::*;
 async fn claim(account: Acc) -> WebDriverResult<()> {
     let caps = DesiredCapabilities::firefox();
     let driver = WebDriver::new("http://localhost:4444", caps).await?;
