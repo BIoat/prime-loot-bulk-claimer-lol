@@ -1,16 +1,5 @@
-enum AccountType {
-    Amazon, 
-    Twitch,
-} 
-struct Acc {
-    accounttype: AccountType,
-    username: String,
-    password: String,
-    claimed: bool,
-}
-
-use thirtyfour::prelude::*;
-async fn amazon_login(amazonusername: &str, amazonpassword: &str) -> WebDriverResult<()> {
+se thirtyfour::prelude::*;
+async fn claim(account: Acc) -> WebDriverResult<()> {
     let caps = DesiredCapabilities::firefox();
     let driver = WebDriver::new("http://localhost:4444", caps).await?;
 
@@ -28,10 +17,10 @@ async fn amazon_login(amazonusername: &str, amazonpassword: &str) -> WebDriverRe
     loginb.click().await?;
 
     let amazon_e = driver.query(By::Id("ap_email")).first().await?;
-    amazon_e.send_keys(amazonusername).await?;
+    amazon_e.send_keys(account.username).await?;
 
     let amazon_p = driver.query(By::Id("ap_password")).first().await?;
-    amazon_p.send_keys(amazonpassword).await?;
+    amazon_p.send_keys(account.password).await?;
 
     driver
         .query(By::Id("signInSubmit"))
@@ -44,6 +33,17 @@ async fn amazon_login(amazonusername: &str, amazonpassword: &str) -> WebDriverRe
 
     Ok(())
 }
+enum AccountType {
+    Amazon,
+    Riot,
+}
+struct Acc {
+    accounttype: AccountType,
+    username: String,
+    password: String,
+    claimed: bool,
+}
+
 #[tokio::main]
 async fn main() {
     let account = Acc {
@@ -52,11 +52,6 @@ async fn main() {
         password: "password".to_string(),
         claimed: false,
     };
-    let result = amazon_login(&account.username,&account.password).await;
+    let result = claim(account).await;
     //    account.claimed=true;
-    let result2 = amazon_login("wad", "wad").await;
-    println!("{}", match account {
-        username => "username existo",
-        _ => "sexo testo"
-    });
 }
