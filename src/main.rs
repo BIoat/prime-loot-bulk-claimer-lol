@@ -1,15 +1,14 @@
-use core::time;
-use image::{buffer, open, DynamicImage, ImageBuffer, RgbImage};
-use scraper::{Html, Selector};
+
+use image::{open};
+
 use std::{
-    io,
-    path::{self, Path},
+    path::{Path},
     time::Duration,
 };
 
 use show_image::{create_window, event, ImageInfo, ImageView};
 use thirtyfour::prelude::*;
-use tokio::time::{sleep, Sleep};
+use tokio::time::{sleep};
 
 async fn solve_captcha(buffer: &[u8]) -> Result<(), Box<dyn std::error::Error>> {
     let image = ImageView::new(ImageInfo::rgba8(200, 70), buffer);
@@ -82,13 +81,10 @@ async fn claim(account: Acc) -> WebDriverResult<()> {
     sleep(Duration::from_millis(2200)).await;
     captcha_pic.screenshot(Path::new("./captcha2.png")).await?;
     let rgba = open("./captcha.png").unwrap().into_rgba8();
-    let solution = solve_captcha(&rgba).await;
+    let _solution = solve_captcha(&rgba).await;
 
     print!(
-        "{}",
-        match solution {
-            _ => false,
-        }
+        "false"
     );
 
     driver.quit().await?;
@@ -115,6 +111,6 @@ async fn main() {
         password: "password".to_string(),
         claimed: false,
     };
-    let result = claim(account).await;
+    let _result = claim(account).await;
     //    account.claimed=true;
 }
