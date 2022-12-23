@@ -69,26 +69,27 @@ async fn claim(account: Acc) -> WebDriverResult<()> {
         .await?;
 
     captcha_pic.wait_until().displayed().await?;
-    let innerhtml = captcha_pic.inner_html().await?;
-    println!("inner html: {}", &innerhtml);
-    let fragment = Html::parse_fragment(&innerhtml);
-    let selector = Selector::parse("img").unwrap();
-    for element in fragment.select(&selector) {
-        println!("inner html: {}", &element.value().name());
-    }
+    // let innerhtml = captcha_pic.inner_html().await?;
+    // println!("inner html: {}", &innerhtml);
+    // let fragment = Html::parse_fragment(&innerhtml);
+    // let selector = Selector::parse("src").unwrap();
+    // for element in fragment.select(&selector) {
+    //     println!("inner html: {}", &element.value().name());
+    // }
 
-    // sleep(Duration::from_millis(1200)).await;
-    // captcha_pic.screenshot(Path::new("./captcha.png")).await?;
-    // sleep(Duration::from_millis(2200)).await;
-    // captcha_pic.screenshot(Path::new("./captcha2.png")).await?;
-    // let rgba = open("./captcha.png").unwrap().into_rgba8();
-    // let solution = solve_captcha(&rgba).await;
-    // print!(
-    //     "{}",
-    //     match solution {
-    //         _ => false,
-    //     }
-    // );
+    sleep(Duration::from_millis(1200)).await;
+    captcha_pic.screenshot(Path::new("./captcha.png")).await?;
+    sleep(Duration::from_millis(2200)).await;
+    captcha_pic.screenshot(Path::new("./captcha2.png")).await?;
+    let rgba = open("./captcha.png").unwrap().into_rgba8();
+    let solution = solve_captcha(&rgba).await;
+
+    print!(
+        "{}",
+        match solution {
+            _ => false,
+        }
+    );
 
     driver.quit().await?;
 
