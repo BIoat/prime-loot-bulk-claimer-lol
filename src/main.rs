@@ -3,12 +3,11 @@ use image::{open};
 
 use std::{
     path::{Path},
-    time::Duration,
 };
 
 use show_image::{create_window, event, ImageInfo, ImageView};
 use thirtyfour::prelude::*;
-use tokio::time::{sleep};
+
 
 async fn solve_captcha(buffer: &[u8]) -> Result<(), Box<dyn std::error::Error>> {
     let image = ImageView::new(ImageInfo::rgba8(200, 70), buffer);
@@ -76,10 +75,7 @@ async fn claim(account: Acc) -> WebDriverResult<()> {
     //     println!("inner html: {}", &element.value().name());
     // }
 
-    sleep(Duration::from_millis(1200)).await;
     captcha_pic.screenshot(Path::new("./captcha.png")).await?;
-    sleep(Duration::from_millis(2200)).await;
-    captcha_pic.screenshot(Path::new("./captcha2.png")).await?;
     let rgba = open("./captcha.png").unwrap().into_rgba8();
     let _solution = solve_captcha(&rgba).await;
 
