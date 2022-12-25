@@ -3,11 +3,7 @@ mod chars;
 use chars::convertchar;
 use std::path::Path;
 
-use show_image::{
-    create_window,
-    event,
-    ImageInfo, ImageView,
-};
+use show_image::{create_window, event, ImageInfo, ImageView};
 use thirtyfour::prelude::*;
 
 async fn solve_captcha(buffer: &[u8]) -> Result<(), Box<dyn std::error::Error>> {
@@ -27,7 +23,6 @@ async fn solve_captcha(buffer: &[u8]) -> Result<(), Box<dyn std::error::Error>> 
             if event.input.state.is_pressed() {
                 let testo = convertchar(&event.input.key_code);
                 println!("{testo}");
-                
             }
         }
     }
@@ -75,7 +70,7 @@ async fn claim(account: Acc) -> WebDriverResult<()> {
 
     captcha_pic.screenshot(Path::new("./captcha.png")).await?;
     let rgba = open("./captcha.png").unwrap().into_rgba8(); // this is for static png. amazon does
-    // gif some times
+                                                            // gif some times
     let _solution = solve_captcha(&rgba).await;
 
     driver.quit().await?;
