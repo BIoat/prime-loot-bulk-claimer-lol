@@ -2,7 +2,7 @@
 
 ## mass amazon prime loot claimer for league of legends
 
-Still WIP, not functional yet...
+WIP, not functional yet...
 
 ### Todo
 
@@ -12,7 +12,13 @@ Still WIP, not functional yet...
 - error handling
 - headless geckodriver window
 
+##### Download pre-built binaries
+
+- [windows](/out/lolclaimeramazon.exe)
+- [linux](/out/lolclaimeramazon)
+
 ### Prerequisites / Building / Usage
+
 
 ##### Requirements
 
@@ -23,11 +29,6 @@ Still WIP, not functional yet...
 ##### Build from source
 
 - `sh ./build.sh`
-
-##### Download
-
-- [windows](/out/lolclaimeramazon.exe)
-- [linux](/out/lolclaimeramazon)
 
 ##### Usage
 
