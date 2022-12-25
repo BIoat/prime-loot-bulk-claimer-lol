@@ -12,13 +12,13 @@ WIP, not functional yet...
 - error handling
 - headless geckodriver window
 
-##### Download pre-built binaries
+### Download pre-built binaries
 
 - [windows](/out/lolclaimeramazon.exe)
 - [linux](/out/lolclaimeramazon)
 
-### Prerequisites / Building / Usage
 
+### Prerequisites / Building / Usage
 
 ##### Requirements
 
@@ -34,12 +34,12 @@ WIP, not functional yet...
 
 ###### Windows
 
-- Download geckodriver from The Requirements link above
-- Move The executable to C:/Windows/System32/
+- download [geckodriver](https://github.com/mozilla/geckodriver/releases) and install firefox
+- Move The "geckodriver.exe" to C:/Windows/System32/
 - open cmd.exe and type `geckodriver` (should start on port 4444)
 - run lolamazonclaimer.exe
 
 ###### Linux
 
 - launch geckodriver
-- execute the binary with `bash chmod +x ./lolamazonclaimer && ./lolamazonclaimer`
+- execute the binary with `chmod +x ./lolamazonclaimer && ./lolamazonclaimer`
