@@ -1,33 +1,33 @@
+use image::open;
+mod chars;
+use chars::convertchar;
+use std::path::Path;
 
-use image::{open};
-
-use std::{
-    path::{Path},
+use show_image::{
+    create_window,
+    event,
+    ImageInfo, ImageView,
 };
-
-use show_image::{create_window, event, ImageInfo, ImageView};
 use thirtyfour::prelude::*;
-
 
 async fn solve_captcha(buffer: &[u8]) -> Result<(), Box<dyn std::error::Error>> {
     let image = ImageView::new(ImageInfo::rgba8(200, 70), buffer);
 
-    let windowsettings =  show_image::WindowOptions {
+    let windowsettings = show_image::WindowOptions {
         fullscreen: false,
         borderless: true,
         resizable: false,
-        size: Some([400,140]),
-    ..Default::default()
+        size: Some([400, 140]),
+        ..Default::default()
     };
     let window = create_window("Captcha Solver [ manual ]", windowsettings)?;
     window.set_image("Captcha-001", image)?;
     for event in window.event_channel()? {
         if let event::WindowEvent::KeyboardInput(event) = event {
-            println!("{:#?}", event);
-            if event.input.key_code == Some(event::VirtualKeyCode::Escape)
-                && event.input.state.is_pressed()
-            {
-                break;
+            if event.input.state.is_pressed() {
+                let testo = convertchar(&event.input.key_code);
+                println!("{testo}");
+                
             }
         }
     }
