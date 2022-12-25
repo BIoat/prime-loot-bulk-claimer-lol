@@ -7,9 +7,6 @@ edition = "2021"
 
 [dependencies]
 image = "0.24.5"
-lodepng = "3.7.2"
-rgb = "0.8.34"
-scraper = "0.14.0"
 show-image = "0.13.1"
 thirtyfour = "0.31.0"
 tokio = "1.23.0"
@@ -17,7 +14,6 @@ tokio = "1.23.0"
 [profile.release]
 opt-level = "z"
 strip = "symbols"
-lto = true
 panic = "abort"
 codegen-units = 1
 

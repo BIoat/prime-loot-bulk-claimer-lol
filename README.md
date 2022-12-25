@@ -9,7 +9,7 @@ WIP, not functional yet...
 - manual captcha solving
 - iterate through twitch and amazon accounts (bulk claim)
 - mark completed accounts and export to claimed.txt
-- error handling
+- error handling & tests
 - headless geckodriver window
 
 ### Download pre-built binaries
