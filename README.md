@@ -1,12 +1,14 @@
 # amazon prime loot-bulk-claimer-lol
 
-mass amazon prime loot claimer for league of legends
-project is still WIP. Non functional
+## mass amazon prime loot claimer for league of legends
+
+Still WIP, not functional yet...
 
 ### Todo
 
 - Manual captcha solving
 - iterate through twitch and amazon accounts (bulk claim)
+- mark completed accounts and export to claimed.txt
 - error handling
 - headless geckodriver window
 
@@ -20,12 +22,12 @@ project is still WIP. Non functional
 
 ##### Build from source
 
-- `bash ./build.sh`
+- `sh ./build.sh`
 
 ##### Download
 
-- [windows](/out/geckodriver.exe)
-- [linux](/out/geckodriver)
+- [windows](/out/lolclaimeramazon.exe)
+- [linux](/out/lolclaimeramazon)
 
 ##### Usage
 
@@ -33,7 +35,7 @@ project is still WIP. Non functional
 
 - Download geckodriver from The Requirements link above
 - Move The executable to C:/Windows/System32/
-- open cmd.exe and type "geckodriver" (should start on port 4444)
+- open cmd.exe and type `geckodriver` (should start on port 4444)
 - run lolamazonclaimer.exe
 
 ###### Linux
