@@ -6,7 +6,7 @@ WIP, not functional yet...
 
 ### Todo
 
-- manual captcha solving
+- solution for GIF captcha
 - iterate through twitch and amazon accounts (bulk claim)
 - mark completed accounts and export to claimed.txt
 - error handling & tests

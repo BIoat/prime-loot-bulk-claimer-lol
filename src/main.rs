@@ -74,7 +74,8 @@ async fn claim(account: Acc) -> WebDriverResult<()> {
     captcha_pic.wait_until().displayed().await?;
 
     captcha_pic.screenshot(Path::new("./captcha.png")).await?;
-    let rgba = open("./captcha.png").unwrap().into_rgba8();
+    let rgba = open("./captcha.png").unwrap().into_rgba8(); // this is for static png. amazon does
+    // gif some times
     let _solution = solve_captcha(&rgba).await;
 
     driver.quit().await?;
