@@ -6,7 +6,7 @@ WIP, not functional yet...
 
 ### Todo
 
-- Manual captcha solving
+- manual captcha solving
 - iterate through twitch and amazon accounts (bulk claim)
 - mark completed accounts and export to claimed.txt
 - error handling
