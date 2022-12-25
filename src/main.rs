@@ -1,27 +1,33 @@
+use image::open;
+mod chars;
+use chars::convertchar;
+use std::path::Path;
 
-use image::{open};
-
-use std::{
-    path::{Path},
+use show_image::{
+    create_window,
+    event,
+    ImageInfo, ImageView,
 };
-
-use show_image::{create_window, event, ImageInfo, ImageView};
 use thirtyfour::prelude::*;
-
 
 async fn solve_captcha(buffer: &[u8]) -> Result<(), Box<dyn std::error::Error>> {
     let image = ImageView::new(ImageInfo::rgba8(200, 70), buffer);
 
-    // Create a window with default options and display the image.
-    let window = create_window("image", Default::default())?;
-    window.set_image("image-001", image)?;
+    let windowsettings = show_image::WindowOptions {
+        fullscreen: false,
+        borderless: true,
+        resizable: false,
+        size: Some([400, 140]),
+        ..Default::default()
+    };
+    let window = create_window("Captcha Solver [ manual ]", windowsettings)?;
+    window.set_image("Captcha-001", image)?;
     for event in window.event_channel()? {
         if let event::WindowEvent::KeyboardInput(event) = event {
-            println!("{:#?}", event);
-            if event.input.key_code == Some(event::VirtualKeyCode::Escape)
-                && event.input.state.is_pressed()
-            {
-                break;
+            if event.input.state.is_pressed() {
+                let testo = convertchar(&event.input.key_code);
+                println!("{testo}");
+                
             }
         }
     }
@@ -30,7 +36,6 @@ async fn solve_captcha(buffer: &[u8]) -> Result<(), Box<dyn std::error::Error>> 
 async fn claim(account: Acc) -> WebDriverResult<()> {
     let caps = DesiredCapabilities::firefox();
     let driver = WebDriver::new("http://localhost:4444", caps).await?;
-
     driver.goto("https://gaming.amazon.com/loot/lol10").await?;
 
     let loginb = driver
@@ -67,21 +72,10 @@ async fn claim(account: Acc) -> WebDriverResult<()> {
         .await?;
 
     captcha_pic.wait_until().displayed().await?;
-    // let innerhtml = captcha_pic.inner_html().await?;
-    // println!("inner html: {}", &innerhtml);
-    // let fragment = Html::parse_fragment(&innerhtml);
-    // let selector = Selector::parse("src").unwrap();
-    // for element in fragment.select(&selector) {
-    //     println!("inner html: {}", &element.value().name());
-    // }
 
     captcha_pic.screenshot(Path::new("./captcha.png")).await?;
     let rgba = open("./captcha.png").unwrap().into_rgba8();
     let _solution = solve_captcha(&rgba).await;
-
-    print!(
-        "false"
-    );
 
     driver.quit().await?;
 
