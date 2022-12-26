@@ -1,0 +1,4 @@
+
+thread '<unnamed>' panicked at 'called `Result::unwrap()` on an `Err` value: Decoding(DecodingError { format: Exact(Png), underlying: Some(Format(FormatError { inner: UnexpectedEof })) })', src/main.rs:77:38
+note: run with `RUST_BACKTRACE=1` environment variable to display a backtrace
+zsh: IOT instruction  ./lolclaimeramazon

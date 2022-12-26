@@ -1,38 +1,17 @@
-use image::open;
-mod chars;
-use chars::convertchar;
-use std::path::Path;
-
-use show_image::{create_window, event, ImageInfo, ImageView};
 use thirtyfour::prelude::*;
 
-async fn solve_captcha(buffer: &[u8]) -> Result<(), Box<dyn std::error::Error>> {
-    let image = ImageView::new(ImageInfo::rgba8(200, 70), buffer);
 
-    let windowsettings = show_image::WindowOptions {
-        fullscreen: false,
-        borderless: true,
-        resizable: false,
-        size: Some([400, 140]),
-        ..Default::default()
-    };
-    let window = create_window("Captcha Solver [ manual ]", windowsettings)?;
-    window.set_image("Captcha-001", image)?;
-    for event in window.event_channel()? {
-        if let event::WindowEvent::KeyboardInput(event) = event {
-            if event.input.state.is_pressed() {
-                let testo = convertchar(&event.input.key_code);
-                println!("{testo}");
-            }
-        }
-    }
-    Ok(())
-}
+mod captcha;
+use captcha::*;
+
 async fn claim(account: Acc) -> WebDriverResult<()> {
     let caps = DesiredCapabilities::firefox();
     let driver = WebDriver::new("http://localhost:4444", caps).await?;
     driver.goto("https://gaming.amazon.com/loot/lol10").await?;
 
+
+    let test = solve_captcha("test.gif").await;
+    println!("Output is: {test}");
     let loginb = driver
         .query(By::XPath(
             "/html/body/div[1]/div/div/nav/div/div/div/div/div[2]/div/div[1]/button",
@@ -68,11 +47,6 @@ async fn claim(account: Acc) -> WebDriverResult<()> {
 
     captcha_pic.wait_until().displayed().await?;
 
-    captcha_pic.screenshot(Path::new("./captcha.png")).await?;
-    let rgba = open("./captcha.png").unwrap().into_rgba8(); // this is for static png. amazon does
-                                                            // gif some times
-    let _solution = solve_captcha(&rgba).await;
-
     driver.quit().await?;
 
     Ok(())
@@ -88,15 +62,15 @@ struct Acc {
     claimed: bool,
 }
 
+#[macroquad::main("Captcha Solver [ manual ]")]
 #[tokio::main]
-#[show_image::main]
 async fn main() {
     let account = Acc {
         accounttype: AccountType::Amazon,
         username: "test".to_string(),
         password: "password".to_string(),
         claimed: false,
-    };
-    let _result = claim(account).await;
+};
+let result = claim(account);
     //    account.claimed=true;
 }
