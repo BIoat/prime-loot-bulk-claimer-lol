@@ -1,6 +1,5 @@
 use thirtyfour::prelude::*;
 
-
 mod captcha;
 use captcha::*;
 
@@ -9,9 +8,6 @@ async fn claim(account: Acc) -> WebDriverResult<()> {
     let driver = WebDriver::new("http://localhost:4444", caps).await?;
     driver.goto("https://gaming.amazon.com/loot/lol10").await?;
 
-
-    let test = solve_captcha("test.gif").await;
-    println!("Output is: {test}");
     let loginb = driver
         .query(By::XPath(
             "/html/body/div[1]/div/div/nav/div/div/div/div/div[2]/div/div[1]/button",
@@ -62,15 +58,21 @@ struct Acc {
     claimed: bool,
 }
 
-#[macroquad::main("Captcha Solver [ manual ]")]
+// #[macroquad::main("Captcha Solver [ manual ]")]
 #[tokio::main]
 async fn main() {
+
+    captcha::open_window();
+    loop {
+        
+    }
+    // println!("Output is: {test}");
     let account = Acc {
         accounttype: AccountType::Amazon,
         username: "test".to_string(),
         password: "password".to_string(),
         claimed: false,
-};
-let result = claim(account);
-    //    account.claimed=true;
+    };
+    let result = claim(account).await;
+
 }
