@@ -1,21 +1,13 @@
 [package]
-name = "LoLClaimerAmazon"
+name = "lolclaimeramazon"
 version = "0.1.0"
 edition = "2021"
 
 # See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
 
 [dependencies]
-async-std = {version = "1.9.0", features = ["attributes"]}
-gif = "0.12.0"
-glium = "0.32.1"
-macroquad = "0.3.25"
-minifb = "0.23.0"
-quad-gif = "0.2.0"
-rgb = "0.8.34"
 thirtyfour = "0.31.0"
 tokio = "1.23.0"
-winit = "0.27.5"
 
 [profile.release]
 opt-level = "z"
