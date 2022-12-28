@@ -1,8 +1,4 @@
-use async_std::{prelude::*, task::block_on};
 use thirtyfour::prelude::*;
-
-mod captcha;
-use captcha::*;
 
 async fn claim(account: Acc) -> WebDriverResult<()> {
     let caps = DesiredCapabilities::firefox();
@@ -58,7 +54,6 @@ struct Acc {
     password: String,
     claimed: bool,
 }
-#[macroquad::main("Captcha Solver [ manual ]")]
 #[tokio::main]
 async fn main() {
     // println!("Output is: {test}");
@@ -68,7 +63,5 @@ async fn main() {
         password: "password".to_string(),
         claimed: false,
     };
-
-    solve_captcha("test.gif").await;
-    loop {}
+    claim(account).await;
 }
