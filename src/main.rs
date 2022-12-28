@@ -1,3 +1,4 @@
+use async_std::{prelude::*, task::block_on};
 use thirtyfour::prelude::*;
 
 mod captcha;
@@ -57,15 +58,9 @@ struct Acc {
     password: String,
     claimed: bool,
 }
-
-// #[macroquad::main("Captcha Solver [ manual ]")]
+#[macroquad::main("Captcha Solver [ manual ]")]
 #[tokio::main]
 async fn main() {
-
-    captcha::open_window();
-    loop {
-        
-    }
     // println!("Output is: {test}");
     let account = Acc {
         accounttype: AccountType::Amazon,
@@ -73,6 +68,7 @@ async fn main() {
         password: "password".to_string(),
         claimed: false,
     };
-    let result = claim(account).await;
 
+    solve_captcha("test.gif").await;
+    loop {}
 }
