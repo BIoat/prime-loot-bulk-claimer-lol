@@ -56,7 +56,7 @@ async fn claim(account: Acc) -> WebDriverResult<()> {
         println!("convert to GIF: {}", is_png);
         let bytes = Vec::new();
         let image = image::load_from_memory_with_format(&buffer, image::ImageFormat::Png).unwrap();
-        let frame = gif::Frame::from_rgba(201, 70, &mut image.to_rgba8());
+        let frame = gif::Frame::from_rgba(200, 70, &mut image.to_rgba8());
         let mut encoder = gif::Encoder::new(bytes, frame.width, frame.height, &[]).unwrap();
         encoder.write_frame(&frame).unwrap();
     }
