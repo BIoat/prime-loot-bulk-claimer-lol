@@ -1,27 +1,9 @@
-use image::*;
-use reqwest;
-
-use image::DynamicImage;
 use regex::Regex;
-use std::error::Error;
-use std::fs::File;
-use std::io::{Bytes, Read};
-use std::{path::Path, process::Stdio};
+use std::process::Stdio;
 use thirtyfour::prelude::*;
-use tokio::io::{AsyncReadExt, AsyncWriteExt};
+use tokio::io::AsyncWriteExt;
 use tokio::process::Command;
-use tokio::task::spawn_blocking;
-async fn ispng(bytes: &[u8]) -> Result<bool, Box<dyn Error>> {
-    // Detect the format of the image
-    let format = image::guess_format(bytes)?;
-    if format == image::ImageFormat::Png {
-        Ok(true)
-    } else {
-        Ok(false)
-    }
-}
 async fn claim(account: Acc) -> WebDriverResult<()> {
-    let client = reqwest::Client::new();
     let caps = DesiredCapabilities::firefox();
     let driver = WebDriver::new("http://localhost:4444", caps).await?;
     driver.goto("https://gaming.amazon.com/loot/lol10").await?;
@@ -57,32 +39,25 @@ async fn claim(account: Acc) -> WebDriverResult<()> {
         .query(By::Id("auth-captcha-image-container"))
         .first()
         .await?;
-    
+
     captcha_pic.wait_until().displayed().await?;
 
     let inner_html = captcha_pic.inner_html().await?.replace("&amp;", "&");
     let re = Regex::new(r#"src="(.+?)""#).unwrap();
 
     let src = re.captures(&inner_html).unwrap().get(1).unwrap().as_str();
-    let mut response = client.get(src).send().unwrap();
-    let mut buffer = Vec::new();
-    response.copy_to(&mut buffer).unwrap();
+    // let mut response = client.get(src).send().unwrap();
+    let response = reqwest::get(src).await.unwrap().bytes().await.unwrap();
+    let buffer = response.to_vec();
 
-    let mut bytes = buffer.clone();
-    let mut clone = bytes.clone();
-    let is_png = spawn_blocking(move || match image::guess_format(&buffer) {
-        Ok(image::ImageFormat::Png) => true,
-        _ => false,
-    })
-    .await
-    .unwrap();
+    let bytes = buffer.clone();
+    let is_png = matches!(image::guess_format(&buffer), Ok(image::ImageFormat::Png));
     if is_png {
         println!("convert to GIF: {}", is_png);
-
-        let image =
-            image::load_from_memory_with_format(&mut *bytes, image::ImageFormat::Png).unwrap();
-        let frame = gif::Frame::from_rgba(200, 70, &mut *image.to_rgba8());
-        let mut encoder = gif::Encoder::new(&mut *clone, frame.width, frame.height, &[]).unwrap();
+        let bytes = Vec::new();
+        let image = image::load_from_memory_with_format(&buffer, image::ImageFormat::Png).unwrap();
+        let frame = gif::Frame::from_rgba(201, 70, &mut image.to_rgba8());
+        let mut encoder = gif::Encoder::new(bytes, frame.width, frame.height, &[]).unwrap();
         encoder.write_frame(&frame).unwrap();
     }
     let mut cmd = Command::new("../out/captchasolver");
@@ -103,7 +78,11 @@ async fn claim(account: Acc) -> WebDriverResult<()> {
 
     drop(stdin);
 
-    let op = child.wait_with_output().await?;
+    let op = child.wait_with_output().await?.stdout;
+
+    let captcha: String = op.iter().map(|&b| b as char).collect();
+
+    println!("Captcha: {}", captcha);
     driver.quit().await?;
 
     Ok(())
