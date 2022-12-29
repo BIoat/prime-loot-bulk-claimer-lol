@@ -37,9 +37,9 @@ WIP, not functional yet...
 - download [geckodriver](https://github.com/mozilla/geckodriver/releases) and install firefox
 - Move The "geckodriver.exe" to C:/Windows/System32/
 - open cmd.exe and type `geckodriver` (should start on port 4444)
-- run lolamazonclaimer.exe
+- run lolclaimeramazon.exe
 
 ###### Linux
 
 - launch geckodriver
-- execute the binary with `chmod +x ./lolamazonclaimer && ./lolamazonclaimer`
+- execute the binary with `chmod +x ./lolclaimeramazon && ./lolclaimeramazon`
