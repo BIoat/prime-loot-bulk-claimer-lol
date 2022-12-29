@@ -2,8 +2,8 @@ use macroquad::prelude::*;
 use std::{
     io::{self, Write, Read},
 };
-pub async fn solve_captcha(filename: &str) -> Result<String, ()> {
-    let mut gif_animation = quad_gif::GifAnimation::load(filename.to_string()).await;
+pub async fn solve_captcha(bytes: Vec<u8>) -> Result<String, ()> {
+    let mut gif_animation = quad_gif::GifAnimation::from_gif_bytes(&bytes);
     let mut text: String = String::new();
     clear_background(BLACK);
     let mut word_length: f32 = 0.0;
@@ -33,20 +33,14 @@ pub async fn solve_captcha(filename: &str) -> Result<String, ()> {
     }
     Ok(text)
 }
-fn read_stdin() -> Result<String, ()> {
-    let mut buffer = String::new();
+fn read_stdin() -> Result<Vec<u8>, ()> {
+    let mut buffer = Vec::new();
 
-    if atty::is(atty::Stream::Stdin) {
-        println!("no captcha image emitted");
+  if atty::is(atty::Stream::Stdin) {
+        println!("no captcha image buffer emitted");
         panic!("no stdin");
     }
-    if io::stdin().read_to_string(&mut buffer).is_ok() {}
-    if buffer.ends_with('\n') {
-        buffer.pop();
-        if buffer.ends_with('\r') {
-            buffer.pop();
-        }
-    }
+    if io::stdin().read_to_end(&mut buffer).is_ok() {}
     Ok(buffer)
 }
 
@@ -54,7 +48,7 @@ fn read_stdin() -> Result<String, ()> {
 #[macroquad::main("Captcha Solver [ manual ]")]
 async fn main() -> io::Result<()> {
     let stdi = read_stdin().unwrap();
-    let result = solve_captcha(&stdi).await;
+    let result = solve_captcha(stdi).await;
 
     let unwrapped = match result {
         Ok(a) => a,
