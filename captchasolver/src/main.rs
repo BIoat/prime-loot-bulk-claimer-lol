@@ -13,8 +13,8 @@ pub async fn solve_captcha(bytes: Vec<u8>) -> Result<String, ()> {
             text.pop();
             word_length -= fontsize / 2.1;
         }
-        let key = get_char_pressed().unwrap_or('%').to_ascii_uppercase();
-        if key != '%' && key.is_alphanumeric() {
+        let key = get_char_pressed().unwrap_or('%');
+        if key != '%' && key.is_alphanumeric() && key.is_ascii() {
             text.push(key);
             word_length += fontsize / 2.1;
         }
