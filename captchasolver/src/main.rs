@@ -1,14 +1,17 @@
 use macroquad::prelude::*;
 use std::{
-    io::{self, Write, Read},
+    fs,
+    io::{self, Read, Write},
 };
 pub async fn solve_captcha(bytes: Vec<u8>) -> Result<String, ()> {
-    let mut gif_animation = quad_gif::GifAnimation::from_gif_bytes(&bytes);
+    let string = String::from_utf8(bytes).unwrap();
+    let filename = string.clone();
+    let mut gif_animation = quad_gif::GifAnimation::load(string).await;
     let mut text: String = String::new();
     clear_background(BLACK);
     let mut word_length: f32 = 0.0;
     let fontsize: f32 = 48.0;
-    while text.len() <= 5 {
+    while text.len() <= 6 {
         if is_key_pressed(KeyCode::Backspace) && !text.is_empty() {
             text.pop();
             word_length -= fontsize / 2.1;
@@ -31,12 +34,13 @@ pub async fn solve_captcha(bytes: Vec<u8>) -> Result<String, ()> {
         gif_animation.tick();
         next_frame().await;
     }
+    std::fs::remove_file(filename).unwrap();
     Ok(text)
 }
 fn read_stdin() -> Result<Vec<u8>, ()> {
     let mut buffer = Vec::new();
 
-  if atty::is(atty::Stream::Stdin) {
+    if atty::is(atty::Stream::Stdin) {
         println!("no captcha image buffer emitted");
         panic!("no stdin");
     }
