@@ -1,5 +1,9 @@
+use image::ImageFormat;
+use rand::distributions::{Alphanumeric, DistString};
 use regex::Regex;
+use std::path::Path;
 use std::process::Stdio;
+use std::time::Instant;
 use thirtyfour::prelude::*;
 use tokio::io::AsyncWriteExt;
 use tokio::process::Command;
@@ -41,43 +45,54 @@ async fn claim(account: Acc) -> WebDriverResult<()> {
         .await?;
 
     captcha_pic.wait_until().displayed().await?;
-
+    let start = Instant::now();
     let inner_html = captcha_pic.inner_html().await?.replace("&amp;", "&");
     let re = Regex::new(r#"src="(.+?)""#).unwrap();
 
     let src = re.captures(&inner_html).unwrap().get(1).unwrap().as_str();
     // let mut response = client.get(src).send().unwrap();
-    let response = reqwest::get(src).await.unwrap().bytes().await.unwrap();
-    let buffer = response.to_vec();
+    let bytes = reqwest::get(src)
+        .await
+        .unwrap()
+        .bytes()
+        .await
+        .unwrap()
+        .to_vec();
 
-    let bytes = buffer.clone();
-    let is_png = matches!(image::guess_format(&buffer), Ok(image::ImageFormat::Png));
-    if is_png {
-        println!("convert to GIF: {}", is_png);
-        let bytes = Vec::new();
-        let image = image::load_from_memory_with_format(&buffer, image::ImageFormat::Png).unwrap();
-        let frame = gif::Frame::from_rgba(200, 70, &mut image.to_rgba8());
-        let mut encoder = gif::Encoder::new(bytes, frame.width, frame.height, &[]).unwrap();
-        encoder.write_frame(&frame).unwrap();
+    let is_gif = matches!(image::guess_format(&bytes), Ok(image::ImageFormat::Gif));
+
+    let filename = Alphanumeric.sample_string(&mut rand::thread_rng(), 16);
+
+    if !is_gif {
+        println!("convert to GIF: {}", !is_gif);
+        let image = image::load_from_memory(&bytes).unwrap();
+
+        image.save_with_format(&filename, ImageFormat::Gif).unwrap();
+        // Save the GIF file
+    } else {
+        tokio::fs::write(Path::new(&filename), &bytes).await?;
     }
+    let elapsed = start.elapsed().as_secs_f64();
     let mut cmd = Command::new("../out/captchasolver");
 
     // to stdin it can now be used as an asynchronous writer.
     cmd.stdout(Stdio::piped());
     cmd.stdin(Stdio::piped());
     let mut child = cmd.spawn().expect("failed to spawn command");
-
     let mut stdin = child
         .stdin
         .take()
         .expect("child did not have a handle to stdin");
     stdin
-        .write_all(&bytes)
+        .write_all(filename.as_bytes())
         .await
         .expect("could not write to stdin");
 
     drop(stdin);
 
+    let elapsed2 = start.elapsed().as_secs_f64();
+    println!("Time elapsed: {} seconds", elapsed);
+    println!("Time elapsed: {} seconds", elapsed2);
     let op = child.wait_with_output().await?.stdout;
 
     let captcha: String = op.iter().map(|&b| b as char).collect();
@@ -107,5 +122,9 @@ async fn main() {
         claimed: false,
     };
 
-    claim(account).await;
+    let result = claim(account).await;
+    match result {
+        Ok(a) => a,
+        Err(_) => (),
+    }
 }
