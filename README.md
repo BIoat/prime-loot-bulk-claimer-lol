@@ -6,7 +6,7 @@ WIP, not functional yet...
 
 ### Todo
 
-- solution for GIF captcha
+- ~~solution for GIF captcha~~
 - iterate through twitch and amazon accounts (bulk claim)
 - mark completed accounts and export to claimed.txt
 - error handling & tests
@@ -35,7 +35,7 @@ WIP, not functional yet...
 ###### Windows
 
 - download [geckodriver](https://github.com/mozilla/geckodriver/releases) and install firefox
-- Move The "geckodriver.exe" to C:/Windows/System32/
+- Move "geckodriver.exe" to C:/Windows/System32/
 - open cmd.exe and type `geckodriver` (should start on port 4444)
 - run lolclaimeramazon.exe
 
