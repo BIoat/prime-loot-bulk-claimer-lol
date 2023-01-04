@@ -11,6 +11,7 @@ WIP, not functional yet...
 - mark completed accounts and export to claimed.txt
 - error handling & tests
 - headless geckodriver window
+- workaround for IP/GEO based amazon redirection/lang
 
 ### Download pre-built binaries
 
