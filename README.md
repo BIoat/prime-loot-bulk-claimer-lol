@@ -1,3 +1,6 @@
+# fuck this
+i'm too dumb for rust
+
 # amazon prime loot-bulk-claimer-lol
 
 ## mass amazon prime loot claimer for league of legends
@@ -11,6 +14,7 @@ WIP, not functional yet...
 - mark completed accounts and export to claimed.txt
 - error handling & tests
 - headless geckodriver window
+- workaround for IP/GEO based amazon redirection/lang
 
 ### Download pre-built binaries
 
