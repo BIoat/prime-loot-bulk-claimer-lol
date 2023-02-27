@@ -1,3 +1,6 @@
+# fuck this
+i'm too dumb for rust
+
 # amazon prime loot-bulk-claimer-lol
 
 ## mass amazon prime loot claimer for league of legends
